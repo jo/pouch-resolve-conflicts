@@ -1,6 +1,6 @@
 {
   "name": "pouch-resolve-conflicts",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Assist in CouchDB conflict resolving.",
   "main": "index.js",
   "scripts": {
