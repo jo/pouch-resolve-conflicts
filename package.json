@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tape test.js | tap-spec",
-    "build": "browserify ./ > dist/pouch-box.js"
+    "build": "browserify ./ > dist/pouch-resolve-conflicts.js"
   },
   "repository": {
     "type": "git",
