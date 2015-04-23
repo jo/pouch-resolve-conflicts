@@ -1,0 +1,27 @@
+{
+  "name": "pouch-resolve-conflicts",
+  "main": "dist/pouch-resolve-conflicts.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/jo/pouch-resolve-conflicts",
+  "authors": [
+    "Johannes J. Schmidt <jo@die-tf.de>"
+  ],
+  "description": "Assist in PouchDB conflict resolving.",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "keywords": [
+    "pouchdb",
+    "couchdb",
+    "conflicts",
+    "conflict-resolution"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "test.js"
+  ]
+}
