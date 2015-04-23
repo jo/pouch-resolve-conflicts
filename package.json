@@ -1,14 +1,15 @@
 {
-  "name": "couch-resolve-conflicts",
+  "name": "pouch-resolve-conflicts",
   "version": "0.0.0",
   "description": "Assist in CouchDB conflict resolving.",
   "main": "index.js",
   "scripts": {
-    "test": "tape test.js | tap-spec"
+    "test": "tape test.js | tap-spec",
+    "build": "browserify ./ > dist/pouch-box.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/jo/couch-resolve-conflicts.git"
+    "url": "git+ssh://git@github.com/jo/pouch-resolve-conflicts.git"
   },
   "keywords": [
     "couchdb",
@@ -18,10 +19,13 @@
   "author": "Johannes J. Schmidt <schmidt@netzmerk.com> (http://die-tf.de/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jo/couch-resolve-conflicts/issues"
+    "url": "https://github.com/jo/pouch-resolve-conflicts/issues"
   },
-  "homepage": "https://github.com/jo/couch-resolve-conflicts#readme",
+  "homepage": "https://github.com/jo/pouch-resolve-conflicts#readme",
   "devDependencies": {
+    "browserify": "^9.0.8",
+    "memdown": "^1.0.0",
+    "pouchdb": "^3.4.0",
     "tap-spec": "^3.0.0",
     "tape": "^4.0.0"
   }

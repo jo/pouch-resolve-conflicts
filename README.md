@@ -1,39 +1,65 @@
-# couch-resolve-conflicts
-Assist in CouchDB conflict resolving.
+# pouch-resolve-conflicts
+Assist in PouchDB conflict resolving.
+
+[![Build Status](https://travis-ci.org/jo/pouch-resolve-conflicts.svg?branch=master)](https://travis-ci.org/jo/pouch-resolve-conflicts)
+
+## Installation
+pouch-resolve-conflicts is [hosted on npm](https://www.npmjs.com/package/pouch-resolve-conflicts).
+
+### Node
+Install via `npm install pouch-resolve-conflicts` 
+
+```js
+var PouchDB = require('pouchdb')
+PouchDB.plugin(require('pouch-resolve-conflicts'))
+```
+
+### Browser
+Use the [browserified build](./dist/pouch-resolve-conflicts.js).
+
+```html
+<script src="pouchdb.js"></script>
+<script src="pouch-resolve-conflicts.js"></script>
+```
+
 
 ## Usage
 ```js
-var resolve = require('couch-resolve-conflicts')
-var nano = require('nano')('http://localhost:5984/mydb')
+var PouchDB = require('pouchdb')
+PouchDB.plugin(require('pouch-resolve-conflicts'))
 
-function merge(a, b) {
+function resolveFun(a, b) {
   // cannot merge: return nothing
-  if (a.foo && b.foo) return
+  if ('foo' in a && 'foo' in b) return
   
   // return one of the docs
-  if (a.foo) return a
-  if (b.foo) return b
+  if ('foo' in a) return a
+  if ('foo' in b) return b
   
   // return changed doc
   a.foo = 'bar'
   return a
 }
 
-// assuming doc has `_conflicts` property (eg. has been queried with `conflicts:true`):
-// {
-//   _id: 'mydoc',
-//  _rev: '2-asd',
-//  foo: 'bar',
-//  _conflicts: [
-//    '2-dfg',
-//  ]
-// }
+var db = new PouchDB('mydb')
 
-resolve(doc, merge, function(err, docs) {
-  nano.bulk(docs, function(err, result) {
-    // conflict resolution saved.
+db
+  // Lets have a conflict
+  .bulkDocs({
+    docs: [
+      { _id: 'mydoc', _rev: '1-one', foo: 'bar' },
+      { _id: 'mydoc', _rev: '1-two', bar: 'baz' }
+    ],
+    new_edits: false
   })
-})
+  // Query doc with `conflicts: true`
+  .then(function(response) {
+    return db.get('mydoc', { conflicts: true })
+  })
+  // And resolve it
+  .then(function(doc) {
+    return db.resolveConflicts(doc, resolveFun)
+  })
 ```
 
 ## Tests
