@@ -1,0 +1,28 @@
+{
+  "name": "couch-resolve-conflicts",
+  "version": "0.0.0",
+  "description": "Assist in CouchDB conflict resolving.",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js | tap-spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jo/couch-resolve-conflicts.git"
+  },
+  "keywords": [
+    "couchdb",
+    "conflicts",
+    "conflict-resolution"
+  ],
+  "author": "Johannes J. Schmidt <schmidt@netzmerk.com> (http://die-tf.de/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jo/couch-resolve-conflicts/issues"
+  },
+  "homepage": "https://github.com/jo/couch-resolve-conflicts#readme",
+  "devDependencies": {
+    "tap-spec": "^3.0.0",
+    "tape": "^4.0.0"
+  }
+}
