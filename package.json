@@ -12,7 +12,7 @@
     "url": "git+ssh://git@github.com/jo/pouch-resolve-conflicts.git"
   },
   "keywords": [
-    "couchdb",
+    "pouchdb",
     "conflicts",
     "conflict-resolution"
   ],
