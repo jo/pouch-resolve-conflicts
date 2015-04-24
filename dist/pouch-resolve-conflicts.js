@@ -45,4 +45,8 @@ exports.resolveConflicts = function(doc, resolveFun) {
     })
 }
 
+if (typeof window !== 'undefined' && window.PouchDB) {
+  window.PouchDB.plugin(module.exports)
+}
+
 },{}]},{},[1]);

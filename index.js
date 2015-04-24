@@ -43,3 +43,7 @@ exports.resolveConflicts = function(doc, resolveFun) {
       return db.bulkDocs(docs)
     })
 }
+
+if (typeof window !== 'undefined' && window.PouchDB) {
+  window.PouchDB.plugin(module.exports)
+}
