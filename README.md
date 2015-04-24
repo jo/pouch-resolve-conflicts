@@ -25,9 +25,11 @@ Use the [browserified build](./dist/pouch-resolve-conflicts.js).
 
 ## Usage
 ```js
-var PouchDB = require('pouchdb')
-PouchDB.plugin(require('pouch-resolve-conflicts'))
-
+// The resolve function. This function takes two documents and returns either
+// one of them, a changed version of one of them, or nothing. In the latter the
+// conflict will not be resolved. If there are more than two conflicting
+// versions this function will be called with each version against the former
+// result.
 function resolveFun(a, b) {
   // cannot merge: return nothing
   if ('foo' in a && 'foo' in b) return
