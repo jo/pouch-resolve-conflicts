@@ -1,7 +1,7 @@
 {
   "name": "pouch-resolve-conflicts",
   "main": "dist/pouch-resolve-conflicts.js",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://github.com/jo/pouch-resolve-conflicts",
   "authors": [
     "Johannes J. Schmidt <jo@die-tf.de>"
