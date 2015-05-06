@@ -1,5 +1,5 @@
-# pouch-resolve-conflicts
-Assist in PouchDB conflict resolving.
+# PouchDB Resolve Conflicts
+PouchDB plugin to assist in PouchDB conflict resolving.
 
 [![Build Status](https://travis-ci.org/jo/pouch-resolve-conflicts.svg?branch=master)](https://travis-ci.org/jo/pouch-resolve-conflicts)
 
