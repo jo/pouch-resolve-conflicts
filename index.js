@@ -38,6 +38,9 @@ exports.resolveConflicts = function(doc, resolveFun) {
           _deleted: true
         }
       })
+      .filter(function(doc) {
+        return doc._rev !== winning._rev || JSON.stringify(doc) !== JSON.stringify(winning)
+      })
     })
     .then(function(docs) {
       return db.bulkDocs(docs)
