@@ -31,6 +31,7 @@ test('resolve conflict by choosing', function(t) {
     .then(function(doc) {
       t.notOk('_conflicts' in doc, 'doc has no _conflicts')
       t.equals(doc.foo, 'bar', 'correct doc choosen')
+      t.equals(doc._rev, '1-one', 'no additional rev')
       t.end()
     })
 })

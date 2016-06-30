@@ -18,7 +18,7 @@ exports.resolveConflicts = function(doc, resolveFun) {
       return conflicts.concat(doc)
     })
     .then(function(docs) {
-      var wDocs = docs.slice()
+      var wDocs = JSON.parse(JSON.stringify(docs))
       
       var winning = wDocs.reduce(function(winning, doc) {
         return winning && resolveFun(doc, winning)
@@ -29,7 +29,10 @@ exports.resolveConflicts = function(doc, resolveFun) {
         reason: 'The conflict could not be resolve, resolveFun did not return a doc'
       })
 
-      return docs.map(function(doc) {
+      return docs.filter(function(doc) {
+        return doc._rev !== winning._rev || JSON.stringify(doc) !== JSON.stringify(winning)
+      })
+      .map(function(doc) {
         if (doc._rev === winning._rev) return winning
 
         return {
