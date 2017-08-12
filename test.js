@@ -30,7 +30,41 @@ test('resolve conflict by choosing', function(t) {
     })
     .then(function(doc) {
       t.notOk('_conflicts' in doc, 'doc has no _conflicts')
-      t.equals(doc.foo, 'bar', 'correct doc choosen')
+      t.equals(doc.foo, 'bar', 'correct doc chosen')
+      t.equals(doc._rev, '1-one', 'no additional rev')
+      t.end()
+    })
+})
+
+test('resolve conflict by choosing (promise)', function(t) {
+  var resolveFun = function(a, b) {
+    return a.foo === 'bar'
+      ? Promise.resolve(a)
+      : Promise.resolve(b)
+  }
+
+  var db = new PouchDB('test-one-promise', { db: memdown })
+
+  db.bulkDocs({
+      docs: [
+        { _id: 'mydoc', _rev: '1-one', foo: 'bar' },
+        { _id: 'mydoc', _rev: '1-two', foo: 'baz' },
+        { _id: 'mydoc', _rev: '1-three', foo: 'boa' }
+      ],
+      new_edits: false
+    })
+    .then(function(response) {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      return db.resolveConflicts(doc, resolveFun)
+    })
+    .then(function() {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      t.notOk('_conflicts' in doc, 'doc has no _conflicts')
+      t.equals(doc.foo, 'bar', 'correct doc chosen')
       t.equals(doc._rev, '1-one', 'no additional rev')
       t.end()
     })
@@ -63,10 +97,43 @@ test('resolve conflict by merging', function(t) {
     })
     .then(function(doc) {
       t.notOk('_conflicts' in doc, 'doc has no _conflicts')
-      t.equals(doc.foo, 'barbaz', 'correct doc choosen')
+      t.equals(doc.foo, 'barbaz', 'correct doc chosen')
       t.end()
     })
 })
+
+test('resolve conflict by merging (promise)', function(t) {
+  var resolveFun = function(a, b) {
+    a.foo += b.foo
+
+    return Promise.resolve(a)
+  }
+
+  var db = new PouchDB('test-two-promise', { db: memdown })
+
+  db.bulkDocs({
+      docs: [
+        { _id: 'mydoc', _rev: '1-one', foo: 'bar' },
+        { _id: 'mydoc', _rev: '1-two', foo: 'baz' }
+      ],
+      new_edits: false
+    })
+    .then(function(response) {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      return db.resolveConflicts(doc, resolveFun)
+    })
+    .then(function() {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      t.notOk('_conflicts' in doc, 'doc has no _conflicts')
+      t.equals(doc.foo, 'barbaz', 'correct doc chosen')
+      t.end()
+    })
+})
+
 
 test('don not resolve conflict', function(t) {
   var resolveFun = function() {
@@ -94,13 +161,39 @@ test('don not resolve conflict', function(t) {
     })
 })
 
+test('don not resolve conflict (promise)', function(t) {
+  var resolveFun = function() {
+    return Promise.resolve()
+  }
+
+  var db = new PouchDB('test-three-promise', { db: memdown })
+
+  db.bulkDocs({
+      docs: [
+        { _id: 'mydoc', _rev: '1-one', foo: 'bar' },
+        { _id: 'mydoc', _rev: '1-two', foo: 'baz' }
+      ],
+      new_edits: false
+    })
+    .then(function(response) {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      return db.resolveConflicts(doc, resolveFun)
+    })
+    .catch(function(error) {
+      t.equals(error.error, 'conflict_resolution_failed', 'conflicts resolution failed')
+      t.end()
+    })
+})
+
 test('complex conflict resolving', function(t) {
   var resolveFun = function(a, b) {
     if ('foo' in a && 'foo' in b) return
-    
+
     if ('foo' in a) return a
     if ('foo' in b) return b
-    
+
     a.foo = 'bar'
     return a
   }
@@ -125,9 +218,47 @@ test('complex conflict resolving', function(t) {
     })
     .then(function(doc) {
       t.notOk('_conflicts' in doc, 'doc has no _conflicts')
-      t.equals(doc.foo, 'bar', 'correct doc choosen')
+      t.equals(doc.foo, 'bar', 'correct doc chosen')
       t.end()
     })
     .catch(function(e) { console.log(e) })
 })
 
+test('complex conflict resolving (promise)', function(t) {
+  var resolveFun = function(a, b) {
+    return new Promise(function(resolve, reject) {
+      if ('foo' in a && 'foo' in b) return resolve(undefined)
+
+      if ('foo' in a) return resolve(a)
+      if ('foo' in b) return resolve(b)
+
+      a.foo = 'bar'
+      return resolve(a)
+    })
+  }
+
+  var db = new PouchDB('test-four-promise', { db: memdown })
+
+  db.bulkDocs({
+      docs: [
+        { _id: 'mydoc', _rev: '1-one', foo: 'bar' },
+        { _id: 'mydoc', _rev: '1-two', bar: 'baz' }
+      ],
+      new_edits: false
+    })
+    .then(function(response) {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      return db.resolveConflicts(doc, resolveFun)
+    })
+    .then(function() {
+      return db.get('mydoc', { conflicts: true })
+    })
+    .then(function(doc) {
+      t.notOk('_conflicts' in doc, 'doc has no _conflicts')
+      t.equals(doc.foo, 'bar', 'correct doc chosen')
+      t.end()
+    })
+    .catch(function(e) { console.log(e) })
+})
