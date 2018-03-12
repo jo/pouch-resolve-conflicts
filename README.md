@@ -3,6 +3,10 @@ PouchDB plugin to assist in PouchDB conflict resolving.
 
 [![Build Status](https://travis-ci.org/jo/pouch-resolve-conflicts.svg?branch=master)](https://travis-ci.org/jo/pouch-resolve-conflicts)
 
+## Disclaimer
+Conflict resolution should better be done server side to avoid hard to debug
+loops when multiple clients resolves conflicts on the same documents.
+
 ## Installation
 pouch-resolve-conflicts is [hosted on npm](https://www.npmjs.com/package/pouch-resolve-conflicts).
 
@@ -30,7 +34,7 @@ Use the [browserified build](./dist/pouch-resolve-conflicts.js).
 // conflict will not be resolved. If there are more than two conflicting
 // versions this function will be called with each version against the former
 // result.
-function resolveFun(a, b) {
+function resolveFun (a, b) {
   // cannot merge: return nothing
   if ('foo' in a && 'foo' in b) return
   
@@ -62,6 +66,19 @@ db
   .then(function(doc) {
     return db.resolveConflicts(doc, resolveFun)
   })
+
+// `resolveFun` can also return a promise:
+function resolveFun (a, b) {
+  return new Promise(function(resolve, reject) {
+    if ('foo' in a && 'foo' in b) return resolve(undefined)
+
+    if ('foo' in a) return resolve(a)
+    if ('foo' in b) return resolve(b)
+
+    a.foo = 'bar'
+    return resolve(a)
+  })
+}
 ```
 
 ## Tests
