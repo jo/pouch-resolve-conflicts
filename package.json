@@ -30,7 +30,7 @@
     "pouchdb": "^7.3.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.9.0",
-    "travis-deploy-once": "^4.4.0",
+    "travis-deploy-once": "^5.0.11",
     "semantic-release": "^15.0.2"
   }
 }
